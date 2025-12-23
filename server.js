@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const port = 5051
 var ip = require('ip');
+var fs = require('fs')
 
 const ipAddr = ip.address()
 
@@ -18,7 +19,15 @@ QRCode.toString(`http://${ipAddr}:${port}/`, {type:'terminal'},
 
 
 app.get('/', (req, res) => {
-  res.send('<a href="/out/HelloWorld.mp4" download ><div style="text-align:center;width:90vw;height:90vh;font-size: 5vw;background-color:red">Download Latest</div></a>')
+  let prod = JSON.parse(fs.readFileSync('./src/product.json'))
+  let produrl = `https://www.tiktok.com/view/product/${prod["id"]}`
+  res.send(`<a href="/out/HelloWorld.mp4" download ><div style="text-align:center;width:90vw;height:60vh;font-size: 5vw;background-color:red">Download Latest</div></a>
+  <a href="${produrl}" target="_blank">
+    <div style="font-size:5vw">
+    Product Link
+    </div>
+  </a>
+    `)
 })
 app.use('/public', express.static('public'))
 app.use('/out', express.static('out'))

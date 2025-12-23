@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
-rm product.html
-rm product.json
-curl $1 -o product.html
+rm -f product.html
+rm -f product.json
+curl -L $1 -o product.html
 node parseProduct.js 
 node downloadImages.js

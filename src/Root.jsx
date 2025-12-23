@@ -1,7 +1,25 @@
 import {Composition} from 'remotion';
 import {HelloWorld} from './HelloWorld';
-import {Logo} from './HelloWorld/Logo';
+import {Cover} from './Maia/Cover';
+import {Content as MaiaContent} from './Maia/Content';
+import MaiaCta from './Maia/Cta';
 import product from './product.json'
+import { continueRender, delayRender, staticFile } from "remotion";
+
+const waitForFont = delayRender();
+const font = new FontFace(
+  `Vogue`,
+  `url('${staticFile("fonts/Vogue.ttf")}') format('truetype')`
+);
+
+font
+  .load()
+  .then(() => {
+    document.fonts.add(font);
+    continueRender(waitForFont);
+  })
+  .catch((err) => console.log("Error loading font", err));
+
 let allImages = []
 if(product.review.review_items?.length){
   product.review.review_items.forEach(r=>allImages = [...allImages, ...(r.review?.images||[])])
@@ -15,7 +33,7 @@ allImages = [...allImages, ...product.images].filter(img=>{
 })
 
 const imgCount = allImages.length
-const imgDuration = Math.max(Math.ceil(6*30/imgCount), 15)
+const imgDuration = Math.max(Math.ceil(9*30/imgCount), 15)
 
 /*
 Generate product.json from 
@@ -54,12 +72,28 @@ export const RemotionRoot = () => {
 			/>
 			{/* Mount any React component to make it show up in the sidebar and work on it individually! */}
 			<Composition
-				id="OnlyLogo"
-				component={Logo}
-				durationInFrames={150}
+				id="MaiaCover"
+				component={Cover}
+				durationInFrames={1}
 				fps={30}
-				width={1920}
-				height={1080}
+				width={1080}
+				height={1920}
+			/>
+			<Composition
+				id="MaiaContent"
+				component={MaiaContent}
+				durationInFrames={1}
+				fps={30}
+				width={1080}
+				height={1920}
+			/>
+			<Composition
+				id="MaiaCta"
+				component={MaiaCta}
+				durationInFrames={1}
+				fps={30}
+				width={1080}
+				height={1920}
 			/>
 		</>
 	);
